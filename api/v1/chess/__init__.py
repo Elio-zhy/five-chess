@@ -15,4 +15,4 @@ def init_api(api):
 
 
 def init_socket(socket):
-    socket.add_url_rule('/echo', echo_socket)
+    socket.add_url_rule('/echo', None, echo_socket)

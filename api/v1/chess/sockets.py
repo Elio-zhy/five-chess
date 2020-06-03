@@ -13,8 +13,6 @@ import datetime
 from flask import g
 from flask_sockets import Sockets
 
-Sockets().add_url_rule()
-
 
 def echo_socket(ws):
     while not ws.closed:
