@@ -10,7 +10,7 @@
     color: white;text-align: center;line-height: 50px;margin-left: 40%;font-size: 20px"></div>
 
 <script>
-    var ws = new WebSocket("ws://49.235.114.122:8000//echo");
+    var ws = new WebSocket("ws://49.235.114.122:8000/echo");
 
     ws.onmessage = function (event) {
         content = document.createTextNode(event.data);
