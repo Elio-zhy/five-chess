@@ -43,4 +43,8 @@ if __name__ == '__main__':
     # init_socket(app)
     init_api(app)
 
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    from gevent import pywsgi
+    from geventwebsocket.handler import WebSocketHandler
+
+    server = pywsgi.WSGIServer(('0.0.0.0', 8000), app, handler_class=WebSocketHandler)
+    server.serve_forever()
