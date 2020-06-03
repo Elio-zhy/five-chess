@@ -6,11 +6,11 @@
 @Author     :   Elio Zhou
 """
 
-from flask import request
+from flask import request, render_template
 from flask_restful import Resource
 
 
 class Index(Resource):
     @staticmethod
     def get():
-        return {'message': 'index'}
+        return render_template('index.html')

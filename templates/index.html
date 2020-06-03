@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>test</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+	</head>
+	<body>
+		<button type="button" id="emit">emit</button>
+		<script>
+			const socket = io.connect("http://49.235.114.122:8000/test");
+
+			socket.on('my response', function(msg) {
+				console.log(msg.data);
+			});
+
+			socket.emit('my event', {data: '123'})
+		</script>
+	</body>
+</html>

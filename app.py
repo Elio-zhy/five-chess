@@ -16,7 +16,7 @@ from api import init_socket, init_api
 
 def create_app():
 
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder=os.path.join(BASE_DIR, 'templates'))
 
     # load configuration.
     app.config.from_pyfile(os.path.join(BASE_DIR, 'settings.py'))
@@ -31,4 +31,4 @@ if __name__ == '__main__':
     init_socket(app)
     init_api(app)
 
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)
