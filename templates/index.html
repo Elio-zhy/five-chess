@@ -1,33 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>test</title>
-	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
-<div id="log">
-</div>
-<label for="emit_data">emit</label><input id="emit_data"><br>
-<label for="broadcast_data">broad cast</label><input id="broadcast_data">
-<button type="button" id="emit">emit</button>
-<button type="button" id="broadcast">broadcast</button>
+<div id="time" style="width: 300px;height: 50px;background-color: #0C0C0C;
+    color: white;text-align: center;line-height: 50px;margin-left: 40%;font-size: 20px"></div>
+
 <script>
-    $(document).ready(function () {
-        var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-        socket.on('my response', function (msg) {
-            $('#log').append('<p>Received: ' + msg.data + '</p>');
-        });
-        $('#emit').click(function (event) {
-            socket.emit('my event', {data: $('#emit_data').val()});
-            return false;
-        });
-        $('#broadcast').click(function (event) {
-            socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
-            return false;
-        });
-    });
+    var ws = new WebSocket("ws://49.235.114.122:8000//echo");
+
+    ws.onmessage = function (event) {
+        content = document.createTextNode(event.data);
+        $("#time").html(content);
+    };
+
 </script>
 </body>
 </html>
