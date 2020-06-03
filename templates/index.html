@@ -1,13 +1,31 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>test</title>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-	</head>
-	<body>
-		<button type="button" id="emit">emit</button>
-		<script>
-		</script>
-	</body>
+<head>
+    <meta charset="utf-8">
+    <title>test</title>
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+</head>
+<body>
+<div id="log">
+</div>
+<button type="button" id="emit">emit</button>
+<button type="button" id="broadcast">broadcast</button>
+<script>
+    $(document).ready(function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+        socket.on('my response', function (msg) {
+            $('#log').append('<p>Received: ' + msg.data + '</p>');
+        });
+        $('#emit').click(function (event) {
+            socket.emit('my event', {data: $('#emit_data').val()});
+            return false;
+        });
+        $('#broadcast').click(function (event) {
+            socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
+            return false;
+        });
+    });
+</script>
+</body>
 </html>
