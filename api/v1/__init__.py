@@ -7,7 +7,7 @@
 """
 
 from flask_restful import Api
-from flask_socketio import SocketIO
+from flask_sockets import Sockets
 
 from api.v1.chess import init_api as chess_init_api
 from api.v1.chess import init_socket as chess_init_socket
@@ -21,7 +21,7 @@ def create_api():
 
 
 def create_socket():
-    socket = SocketIO()
+    socket = Sockets()
     chess_init_socket(socket)
 
     return socket
