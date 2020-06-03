@@ -7,8 +7,11 @@
 """
 
 import os
+import datetime
+import time
 
 from flask import Flask
+from flask_sockets import Sockets
 
 from settings import BASE_DIR
 from api import init_socket, init_api
@@ -28,7 +31,16 @@ if __name__ == '__main__':
 
     app = create_app()
 
-    init_socket(app)
+    socket = Sockets(app)
+
+    @socket.route('/echo')
+    def echo_socket(ws):
+        while not ws.closed:
+            now = datetime.datetime.now().isoformat() + 'Z'
+            ws.send(now)
+            time.sleep(1)
+
+    # init_socket(app)
     init_api(app)
 
     app.run(host='0.0.0.0', port=8000, debug=True)

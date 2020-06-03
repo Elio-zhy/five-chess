@@ -18,4 +18,4 @@ def echo_socket(ws):
     while not ws.closed:
         now = datetime.datetime.now().isoformat() + 'Z'
         ws.send(now)
-        time.sleep()
+        time.sleep(1)
