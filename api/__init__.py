@@ -6,6 +6,8 @@
 @Author     :   Elio Zhou
 """
 
+from flask import g
+
 from api.v1 import create_api, create_socket
 
 

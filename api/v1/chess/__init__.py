@@ -6,7 +6,7 @@
 @Author     :   Elio Zhou
 """
 
-from api.v1.chess.sockets import echo_socket
+from api.v1.chess.sockets import play_chess
 from api.v1.chess.views import Index
 
 
@@ -15,4 +15,4 @@ def init_api(api):
 
 
 def init_socket(socket):
-    socket.add_url_rule('/echo', None, echo_socket)
+    socket.add_url_rule('/play', None, play_chess)

@@ -6,15 +6,105 @@
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
-<div id="time" style="width: 300px;height: 50px;background-color: #0C0C0C;
-    color: white;text-align: center;line-height: 50px;margin-left: 40%;font-size: 20px"></div>
-
+<input id="name">
+<button id="connect">connect</button>
+<div id="room-list">
+</div>
+<div id="room-info">
+</div>
+<table cellpadding="0" cellspacing="0" border="1" id="board">
+    <!--    <tr>-->
+    <!--<td style="height: 30px; width: 30px;"><img src="0.gif" alt="bg" style="height: 30px; width: 30px"></td>-->
+    <!--<td style="height: 30px; width: 30px;"><img src="0.gif" alt="bg" style="height: 30px; width: 30px"></td>-->
+    <!--    </tr>-->
+</table>
+<button id="ready">ready</button>
+<button id="leave">leave</button>
 <script>
-    var ws = new WebSocket("ws://49.235.114.122:8000/echo");
+    {
+        // draw board
+        let r = "";
+        for (let i = 0; i < 10; i++) {
+            let tr = "";
+            for (let j = 0; j < 10; j++) {
+                tr = tr + "<td style=\"height: 30px; width: 30px;\"><img x='" + j + "' y='" + i + "' class='chess' src=\"0.gif\" alt=\"bg\" style=\"height: 30px; width: 30px\"></td>"
+            }
+            tr = "<tr>" + tr + "</tr>";
+            r = r + tr;
+        }
+        $("#board").html(r);
+    }
+
+    let ws = new WebSocket("ws://127.0.0.1:8000/play");
+
+    $("img.chess").click(function () {
+        ws.send('put ' + $(this).attr('x') + " " + $(this).attr('y'));
+    });
+
+    $("#ready").click(function () {
+        ws.send('ready');
+    });
+
+    $("#connect").click(function () {
+        ws.send('connect ' + $("#name").val())
+    });
+
+    $("#leave").click(function () {
+        $("#room-info").html("");
+        ws.send('leave');
+
+        for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    $("img.chess[x=" + i + "][y=" + j + "]").attr('src', "0.gif");
+                }
+            }
+    });
 
     ws.onmessage = function (event) {
-        content = document.createTextNode(event.data);
-        $("#time").html(content);
+        let content = event.data;
+        content = JSON.parse(content);
+        console.log(typeof content);
+
+
+        console.log(content["room-list"]);
+        if (content["room-list"] !== undefined) {
+            console.log(content);
+            let room_list_html = "在线人数: " + content["online_num"] + "<br>";
+            console.log(content["room-list"]);
+            $("#root-list").html("");
+            for (let i = 0; i < content["room-list"].length; i++) {
+                room_list_html += content["room-list"][i]["uuid"] + "\t" + content["room-list"][i]["p_num"] + "/2\t" + content["room-list"][i]["status"] + "<button id=" + content["room-list"][i]["uuid"] + " class='enter'>enter</button><br>\n";
+            }
+            console.log(room_list_html);
+            $("#room-list").html(room_list_html);
+            $("button.enter").click(function () {
+                ws.send('enter ' + $(this).attr('id'));
+            })
+        } else if (content["room"] !== undefined) {
+            console.log(content["room"]);
+            let r = "房间id: " + content["room"]["uuid"] + "\n状态: " + content["room"]["status"] + "\n";
+            for (let i = 0; i < content["room"]["users"].length; i++) {
+                r += "玩家" + (i + 1) + ": " + content["room"]["users"][i]["name"] + " " + content["room"]["users"][i]["status"];
+            }
+            $("#room-info").html(r);
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    $("img.chess[x=" + i + "][y=" + j + "]").attr('src', content["room"]["board"][i][j] + ".gif");
+                }
+            }
+        } else if (content["board"] !== undefined) {
+            console.log(content["board"]);
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    $("img.chess[x=" + i + "][y=" + j + "]").attr('src', content["board"][j][i] + ".gif");
+                }
+            }
+        } else if (content["result"] !== undefined) {
+            console.log(content);
+            alert(content["result"]);
+        } else if (content["alert"] !== undefined) {
+            alert(content["alert"]);
+        }
     };
 
 </script>

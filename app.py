@@ -11,15 +11,14 @@ import datetime
 import time
 
 from flask import Flask
-from flask_sockets import Sockets
 
 from settings import BASE_DIR
 from api import init_socket, init_api
 
 
 def create_app():
-
-    app = Flask(__name__, template_folder=os.path.join(BASE_DIR, 'templates'))
+    app = Flask(__name__, template_folder=os.path.join(BASE_DIR, 'templates'),
+                static_folder=os.path.join(BASE_DIR, 'static'), static_url_path='')
 
     # load configuration.
     app.config.from_pyfile(os.path.join(BASE_DIR, 'settings.py'))
@@ -28,19 +27,9 @@ def create_app():
 
 
 if __name__ == '__main__':
-
     app = create_app()
 
-    socket = Sockets(app)
-
-    @socket.route('/echo')
-    def echo_socket(ws):
-        while not ws.closed:
-            now = datetime.datetime.now().isoformat() + 'Z'
-            ws.send(now)
-            time.sleep(1)
-
-    # init_socket(app)
+    init_socket(app)
     init_api(app)
 
     from gevent import pywsgi
