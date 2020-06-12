@@ -32,6 +32,9 @@ def play_chess(ws: WebSocket):
             # receive message.
             message: str = ws.receive()
 
+            if message is None:
+                continue
+
             # message format: `action data`
             message: list = message.split(' ')
 
